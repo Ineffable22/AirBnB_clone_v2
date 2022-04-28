@@ -14,14 +14,14 @@ env.user = 'ubuntu'
 def do_pack():
     """ All archives must be stored in the folder versions
     (your function should create this folder if it doesn’t exist) """
-    local("mkdir -p versions")
-    data = datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")
-    filename = "versions/web_static_{}.tgz web_static".format(data)
-
-    status = local("tar -cvzf {}".format(filename))
-    if status.failed:
+    try:
+        local("mkdir -p versions")
+        date = datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")
+        filename = "versions/web_static_{}.tgz".format(date)
+        local("tar -cvzf {} web_static".format(filename))
+        return filename
+    except Exception:
         return None
-    return status
 
 
 def do_deploy(archive_path):
@@ -47,7 +47,7 @@ def do_deploy(archive_path):
 
 
 def deploy():
-    """ do path an do deploy"""
+    """Distributes an archive to the web servers"""
     archive_path = do_pack()
     if archive_path is None:
         return False
