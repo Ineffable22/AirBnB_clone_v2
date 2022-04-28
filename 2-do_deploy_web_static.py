@@ -14,10 +14,10 @@ def do_deploy(archive_path):
     (using env.hosts = ['<IP web-01>', 'IP web-02'] variable in your script)"""
     if exists(archive_path) is False:
         return False
-    exc = archive_path.split("/")[-1]
-    filename = exc.split(".")[0]
-    path = "/data/web_static/releases/"
     try:
+        exc = archive_path.split("/")[-1]
+        filename = exc.split(".")[0]
+        path = "/data/web_static/releases/"
         put(archive_path, '/tmp/')
         run('mkdir -p {}{}/'.format(path, filename))
         run('sudo tar -xzf /tmp/{0} -C {1}{2}/'.format(exc, path, filename))
@@ -28,5 +28,4 @@ def do_deploy(archive_path):
         run('ln -s {}{}/ /data/web_static/current'.format(path, filename))
     except Exception:
         return False
-    print('New version deployed!')
     return True
