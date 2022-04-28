@@ -20,10 +20,10 @@ def do_deploy(archive_path):
     if res.failed:
         return False
 
-    res = run('mkdir -p {}/{}/'.format(path, filename))
+    res = run('mkdir -p {}{}/'.format(path, filename))
     if res.failed:
         return False
-    res = run('sudo tar -xzf /tmp/{0} -C {1}/{2}/'.format(exc, path, filename))
+    res = run('sudo tar -xzf /tmp/{0} -C {1}{2}/'.format(exc, path, filename))
     if res.failed:
         return False
 
@@ -35,7 +35,7 @@ def do_deploy(archive_path):
     if res.failed:
         return False
 
-    res = run('rm -rf {}/{}/web_static'.format(path, filename))
+    res = run('rm -rf {}{}/web_static'.format(path, filename))
     if res.failed:
         return False
 
