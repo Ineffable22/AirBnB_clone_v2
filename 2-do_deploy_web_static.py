@@ -8,6 +8,7 @@ from os.path import exists
 env.hosts = ['35.185.108.180', '34.229.169.234']
 env.user = 'ubuntu'
 
+
 def do_deploy(archive_path):
     """All remote commands must be executed on your both web servers
     (using env.hosts = ['<IP web-01>', 'IP web-02'] variable in your script)"""
