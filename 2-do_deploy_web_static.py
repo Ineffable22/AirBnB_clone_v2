@@ -15,11 +15,8 @@ def do_deploy(archive_path):
     if not exists(archive_path):
         return False
     filename = archive_path.split("/")[-1]
-    print("Filename ->", filename)
     no_exc = filename.split(".")[0]
-    print("no_exc -> ", no_exc)
     path = "/data/web_static/releases/"
-
     res = put(archive_path, '/tmp/{}.tgz'.format(filename))
     if res.failed:
         return False
@@ -39,7 +36,7 @@ def do_deploy(archive_path):
     if res.failed:
         return False
 
-    res = run('rm -rf {}{}/web_static'.format(path, no_exc))
+    res = run('rm -rf {}/{}/web_static'.format(path, no_exc))
     if res.failed:
         return False
 
@@ -50,5 +47,5 @@ def do_deploy(archive_path):
     res = run('ln -s {}{}/ /data/web_static/current'.format(path, no_exc))
     if res.failed:
         return False
-
+    print('New version deployed!')
     return True
