@@ -14,18 +14,41 @@ def do_deploy(archive_path):
     (using env.hosts = ['<IP web-01>', 'IP web-02'] variable in your script)"""
     if not exists(archive_path):
         return False
-    try:
-        filename = archive_path.split("/")[-1]
-        no_exc = filename.split(".")[0]
-        path = "/data/web_static/releases/"
-        put(archive_path, '/tmp/')
-        run('mkdir -p {}{}/'.format(path, no_exc))
-        run('sudo tar -xzf /tmp/{} -C {}{}/'.format(filename, path, no_exc))
-        run('rm /tmp/{}'.format(filename))
-        run('mv {0}{1}/web_static/* {0}{1}/'.format(path, no_exc))
-        run('rm -rf {}{}/web_static'.format(path, no_exc))
-        run('rm -rf /data/web_static/current')
-        run('ln -s {}{}/ /data/web_static/current'.format(path, no_exc))
-        return True
-    except Exception:
+    filename = archive_path.split("/")[-1]
+    print("Filename ->", filename)
+    no_exc = filename.split(".")[0]
+    print("no_exc -> ", no_exc)
+    path = "/data/web_static/releases/"
+
+    res = put(archive_path, '/tmp/{}.tgz'.format(filename))
+    if res.failed:
         return False
+
+    res = run('mkdir -p {}/{}/'.format(path, filename))
+    if res.failed:
+        return False
+    res = run('sudo tar -xzf /tmp/{} -C {}/{}/'.format(filename, filename))
+    if res.failed:
+        return False
+
+    res = run('rm /tmp/{}'.format(filename))
+    if res.failed:
+        return False
+
+    res = run('mv {0}{1}/web_static/* {0}{1}/'.format(path, no_exc))
+    if res.failed:
+        return False
+
+    res = run('rm -rf {}{}/web_static'.format(path, no_exc))
+    if res.failed:
+        return False
+
+    res = run('rm -rf /data/web_static/current')
+    if res.failed:
+        return False
+
+    res = run('ln -s {}{}/ /data/web_static/current'.format(path, no_exc))
+    if res.failed:
+        return False
+
+    return True
