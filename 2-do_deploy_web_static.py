@@ -6,13 +6,12 @@ distributes an archive to your web servers, using the function do_deploy"""
 from fabric.operations import env, put, run
 from os.path import exists
 env.hosts = ['35.185.108.180', '34.229.169.234']
-env.user = 'ubuntu'
 
 
 def do_deploy(archive_path):
     """All remote commands must be executed on your both web servers
     (using env.hosts = ['<IP web-01>', 'IP web-02'] variable in your script)"""
-    if not exists(archive_path):
+    if exists(archive_path) is False:
         return False
     exc = archive_path.split("/")[-1]
     filename = exc.split(".")[0]
