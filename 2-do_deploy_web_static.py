@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """This script (based on the file 1-pack_web_static.py) that
 distributes an archive to your web servers, using the function do_deploy"""
+
+
 from fabric.operations import env, put, run
 from os.path import exists
-
-
 env.hosts = ['35.185.108.180', '34.229.169.234']
 env.user = 'ubuntu'
 
@@ -27,5 +27,5 @@ def do_deploy(archive_path):
         run('rm -rf /data/web_static/current')
         run('ln -s {}{}/ /data/web_static/current'.format(path, no_exc))
         return True
-    except:
+    except Exception:
         return False
