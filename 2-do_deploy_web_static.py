@@ -17,35 +17,16 @@ def do_deploy(archive_path):
     exc = archive_path.split("/")[-1]
     filename = exc.split(".")[0]
     path = "/data/web_static/releases/"
-    res = put(archive_path, '/tmp/')
-    if res.failed:
-        return False
-
-    res = run('mkdir -p {}{}/'.format(path, filename))
-    if res.failed:
-        return False
-    res = run('tar -xzf /tmp/{0} -C {1}{2}/'.format(exc, path, filename))
-    if res.failed:
-        return False
-
-    res = run('rm /tmp/{}'.format(exc))
-    if res.failed:
-        return False
-
-    res = run('mv {0}{1}/web_static/* {0}{1}/'.format(path, filename))
-    if res.failed:
-        return False
-
-    res = run('rm -rf {}{}/web_static'.format(path, filename))
-    if res.failed:
-        return False
-
-    res = run('rm -rf /data/web_static/current')
-    if res.failed:
-        return False
-
-    res = run('ln -s {}{}/ /data/web_static/current'.format(path, filename))
-    if res.failed:
+    try:
+        put(archive_path, '/tmp/')
+        run('mkdir -p {}{}/'.format(path, filename))
+        run('sudo tar -xzf /tmp/{0} -C {1}{2}/'.format(exc, path, filename))
+        run('rm /tmp/{}'.format(exc))
+        run('sudo mv {0}{1}/web_static/* {0}{1}/'.format(path, filename))
+        run('rm -rf {}{}/web_static'.format(path, filename))
+        run('rm -rf /data/web_static/current')
+        run('ln -s {}{}/ /data/web_static/current'.format(path, filename))
+    except Exception:
         return False
     print('New version deployed!')
     return True
