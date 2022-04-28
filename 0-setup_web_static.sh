@@ -2,10 +2,8 @@
 # Prepare your web servers
 sudo apt-get update
 #sudo apt-get upgrade -y
-sudo apt install -y nginx
-sudo mkdir -p /data/web_static
-sudo mkdir -p /data/web_static/shared
-sudo mkdir -p /data/web_static/releases/test
+sudo apt-get install -y nginx
+sudo mkdir -p /data/web_static/shared /data/web_static/releases/test
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 sudo chown -R ubuntu:ubuntu /data
 echo "Hello World" > /data/web_static/releases/test/index.html
