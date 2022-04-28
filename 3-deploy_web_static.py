@@ -15,12 +15,12 @@ def do_pack():
     """ All archives must be stored in the folder versions
     (your function should create this folder if it doesn’t exist) """
     local("mkdir -p versions")
-    status = local("tar -cvzf versions/web_static_{}.tgz web_static"
-                   .format(datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")),
-                   capture=True)
+    data = datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")
+    filename = "versions/web_static_{}.tgz web_static".format(data)
+
+    status = local("tar -cvzf {}".format(filename))
     if status.failed:
         return None
-    print(status)
     return status
 
 
