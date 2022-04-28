@@ -3,21 +3,22 @@
 
 ## Update server
 sudo apt-get -y update
+sudo apt-get -y upgrade
 
 ## Install NGINX
-sudo apt-get install -y nginx
+sudo apt-get -y install nginx
 
 ## Creates directories
 sudo mkdir -p /data/web_static/shared /data/web_static/releases/test
+
+## Write Hello World in index with tee command
+echo "Hello World" | sudo tee /data/web_static/releases/test/index.html
 
 ## Create Symbolic link
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
 ## Change owner and group like ubuntu
 sudo chown -R ubuntu:ubuntu /data
-
-## Write Hello World in index
-echo "Hello World" > /data/web_static/releases/test/index.html
 
 ## Add new configuration to NGINX
 data="\n\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n"
