@@ -14,29 +14,29 @@ def do_deploy(archive_path):
     (using env.hosts = ['<IP web-01>', 'IP web-02'] variable in your script)"""
     if not exists(archive_path):
         return False
-    filename = archive_path.split("/")[-1]
-    no_exc = filename.split(".")[0]
+    exc = archive_path.split("/")[-1]
+    filename = exc.split(".")[0]
     path = "/data/web_static/releases/"
-    res = put(archive_path, '/tmp/{}.tgz'.format(filename))
+    res = put(archive_path, '/tmp/{}'.format(exc))
     if res.failed:
         return False
 
     res = run('mkdir -p {}/{}/'.format(path, filename))
     if res.failed:
         return False
-    res = run('sudo tar -xzf /tmp/{} -C {}/{}/'.format(filename, filename))
+    res = run('sudo tar -xzf /tmp/{0} -C {1}/{2}/'.format(exc, path, filename))
     if res.failed:
         return False
 
-    res = run('rm /tmp/{}'.format(filename))
+    res = run('rm /tmp/{}'.format(exc))
     if res.failed:
         return False
 
-    res = run('mv {0}{1}/web_static/* {0}{1}/'.format(path, no_exc))
+    res = run('sudo mv {0}{1}/web_static/* {0}{1}/'.format(path, filename))
     if res.failed:
         return False
 
-    res = run('rm -rf {}/{}/web_static'.format(path, no_exc))
+    res = run('rm -rf {}/{}/web_static'.format(path, filename))
     if res.failed:
         return False
 
@@ -44,7 +44,7 @@ def do_deploy(archive_path):
     if res.failed:
         return False
 
-    res = run('ln -s {}{}/ /data/web_static/current'.format(path, no_exc))
+    res = run('ln -s {}/{} /data/web_static/current'.format(path, filename))
     if res.failed:
         return False
     print('New version deployed!')
