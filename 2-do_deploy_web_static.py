@@ -17,7 +17,7 @@ def do_deploy(archive_path):
     exc = archive_path.split("/")[-1]
     filename = exc.split(".")[0]
     path = "/data/web_static/releases/"
-    res = put(archive_path, '/tmp/{}'.format(exc))
+    res = put(archive_path, '/tmp/')
     if res.failed:
         return False
 
