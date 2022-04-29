@@ -12,43 +12,63 @@ env.user = 'ubuntu'
 
 
 def do_pack():
-    """ All archives must be stored in the folder versions
-    (your function should create this folder if it doesn’t exist) """
+    """
+    Function:
+        do_pack function.
+    """
     try:
-        local("mkdir -p versions")
-        date = datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")
-        filename = "versions/web_static_{}.tgz".format(date)
-        local("tar -cvzf {} web_static".format(filename))
-        return filename
-    except Exception:
+        if not os.path.exists("versions"):
+            local('mkdir versions')
+        t = datetime.now()
+        f = "%Y%m%d%H%M%S"
+        archive_path = 'versions/web_static_{}.tgz'.format(t.strftime(f))
+        local('tar -cvzf {} web_static'.format(archive_path))
+        return archive_path
+    except BaseException:
         return None
 
 
 def do_deploy(archive_path):
-    """All remote commands must be executed on your both web servers
-    (using env.hosts = ['<IP web-01>', 'IP web-02'] variable in your script)"""
-    if exists(archive_path) is False:
+    """
+    Function:
+        Distributes an archive to your web servers,
+        using the function do_deploy
+    Returns:
+        Returns False if the file at the path
+        archive_path doesn't exist.
+    """
+    if not os.path.exists(archive_path):
         return False
     try:
-        exc = archive_path.split("/")[-1]
-        filename = exc.split(".")[0]
-        path = "/data/web_static/releases/"
-        put(archive_path, '/tmp/')
-        run('mkdir -p {}{}/'.format(path, filename))
-        run('sudo tar -xzf /tmp/{0} -C {1}{2}/'.format(exc, path, filename))
-        run('rm /tmp/{}'.format(exc))
-        run('sudo mv {0}{1}/web_static/* {0}{1}/'.format(path, filename))
-        run('rm -rf {}{}/web_static'.format(path, filename))
-        run('rm -rf /data/web_static/current')
-        run('ln -s {}{}/ /data/web_static/current'.format(path, filename))
+        pname = archive_path.replace('/', ' ')
+        pname = shlex.split(pname)
+        pname = pname[-1]
+
+        wname = pname.replace('.', ' ')
+        wname = shlex.split(wname)
+        wname = wname[0]
+
+        releases_path = "/data/web_static/releases/{}/".format(wname)
+        tmp_path = "/tmp/{}".format(pname)
+
+        put(archive_path, "/tmp/")
+        run("mkdir -p {}".format(releases_path))
+        run("tar -xzf {} -C {}".format(tmp_path, releases_path))
+        run("rm {}".format(tmp_path))
+        run("mv {}web_static/* {}".format(releases_path, releases_path))
+        run("rm -rf {}web_static".format(releases_path))
+        run("rm -rf /data/web_static/current")
+        run("ln -s {} /data/web_static/current".format(releases_path))
+        print("New version deployed!")
         return True
-    except Exception:
+    except BaseException:
         return False
 
 
 def deploy():
     """Distributes an archive to the web servers"""
     archive_path = do_pack()
-    if archive_path is None:
+    except BaseException:
         return False
+
     return do_deploy(archive_path)
