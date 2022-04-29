@@ -67,7 +67,8 @@ def do_deploy(archive_path):
 
 def deploy():
     """Distributes an archive to the web servers"""
-    archive_path = do_pack()
+    try:
+        archive_path = do_pack()
     except BaseException:
         return False
 
