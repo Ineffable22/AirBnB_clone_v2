@@ -2,10 +2,10 @@
 <html lang="en">
     <head>
         <title>AirBnB clone</title>
-        <link rel="stylesheet" href="styles/4-common.css"/>
-        <link rel="stylesheet" href="styles/3-header.css"/>
-        <link rel="stylesheet" href="styles/3-footer.css"/>
-        <link rel="stylesheet" href="styles/6-filters.css"/>
+        <link rel="stylesheet" href="../static/styles/4-common.css"/>
+        <link rel="stylesheet" href="../static/styles/3-header.css"/>
+        <link rel="stylesheet" href="../static/styles/3-footer.css"/>
+        <link rel="stylesheet" href="../static/styles/6-filters.css"/>
     </head>
     <body>
         <header>
@@ -20,10 +20,10 @@
                     <ul class="popover">
                         {% for state in states | sort(attribute='name') %}
                         <li>
-                            <h2>{{ state.name }}</h2>
+                            <h2>{{ state.name|e }}</h2>
                             <ul>
-                                {% for city in state.cities %}
-                                <li><h4>{{ city.name }}</h4></li>
+                                {% for city in state.cities | sort(attribute='name') %}
+                                <li><h4>{{ city.name|e }}</h4></li>
                                 {% endfor %}
                             </ul>
                         </li>
