@@ -15,6 +15,7 @@ classes = {"Amenity": Amenity, "City": City,
 
 
 class DBStorage:
+    """This class manages storage of hbnb models in JSON format"""
     __engine = None
     __session = None
 
@@ -54,3 +55,6 @@ class DBStorage:
         Session = sessionmaker()
         Session.configure(bind=self.__engine, expire_on_commit=False)
         self.__session = Session()
+
+    def close(self):
+        self.__session.close()
