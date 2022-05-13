@@ -16,11 +16,11 @@ class State(BaseModel, Base):
     else:
         @property
         def cities(self):
-            """  returns the list of City instances with state_id equals
+            """ returns the list of City instances with state_id equals
             to the current State.id """
             dict_city = storage.all(City)
             store = []
-            for key, value in dict_city.items():
-                if value.state_id == self.id:
+            for city in dict_city.values():
+                if city.state_id == self.id:
                     store.append(value)
             return store
